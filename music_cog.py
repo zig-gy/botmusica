@@ -62,10 +62,11 @@ class music_cog(commands.Cog):
                     
     async def join_vc(self, context, channel):
         id = int(context.guild.id)
-        
+        print(id)
         if self.vc[id] == None or not self.vc[id].is_connected():
+            print(self.vc[id])
             self.vc[id] = await channel.connect()
-            
+            print(self.vc[id])
             if self.vc[id] == None:
                 await context.send("No me pude conectar, ponte vio choro")
                 return
@@ -137,3 +138,32 @@ class music_cog(commands.Cog):
             await context.send("No hay canciones perkinaso")
             self.queueIndex[id] += 1
             self.is_playing = False
+            
+    @commands.command(
+        name="join",
+        aliases=["j","conectar"],
+        help="Conecta el bot al canal actual"
+    )
+    async def join(self, context):
+        if context.author.voice:
+            userChannel = context.author.voice.channel
+            #print(self.vc[context.guild.id])
+            await self.join_vc(context, userChannel)
+            #print(self.vc[id])
+            await context.send(f'Chochetrox se conecta a {userChannel}')
+        else:
+            await context.send("Necesitas estar conectado a un canal de voz, perkinaso")
+            
+    @commands.command(
+        name="leave",
+        aliases=["l","salir"],
+        help="Desconecta el bot del canal actual"
+    )
+    async def leave(self, context):
+        id = int(context.guild.id)
+        self.is_playing[id] = self.is_paused[id] = False
+        self.musicQueue[id] = []
+        self.queueIndex = 0
+        if self.vc[id] != None:
+            await context.send("Chochetrox dice chao, conchetumare")
+            await self.vc[id].disconnect()
