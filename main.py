@@ -1,15 +1,32 @@
 """
     Chochetongo
 """
+import asyncio
+from http import client
 from dotenv import load_dotenv
 import os
-from discord_components import ComponentsBot
-from music_cog import music_cog
+import discord
+from discord.ext import commands, tasks
+from cogs.music_cog import music_cog
 
-bot = ComponentsBot(command_prefix = 'choche>') #Para activar bot con choche>
-bot.add_cog(music_cog(bot= bot))
+intents = discord.Intents().all()
+client = discord.Client(intents=intents)
+bot = commands.Bot(command_prefix="choche>", intents=intents)
 
-#Abrir token y aplicarlo al bot
+#abrir el token
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
-bot.run(TOKEN)
+
+#para cargar cogs
+async def load():
+    for filename in os.listdir("./cogs"):
+        if filename.endswith(".py"):
+            await bot.load_extension(f"cogs.{filename[:-3]}")
+            
+#comenzar el bot
+async def main():
+    async with bot:
+        await load()
+        await bot.start(TOKEN)
+        
+asyncio.run(main())

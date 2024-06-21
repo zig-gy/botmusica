@@ -4,7 +4,7 @@ El cog de musica del bot, viva
 """
 
 import discord
-from discord_components import Select, SelectOption, Button
+#from discord_components import Select, SelectOption, Button
 from discord.ext import commands
 import asyncio
 from asyncio import run_coroutine_threadsafe
@@ -150,7 +150,7 @@ class music_cog(commands.Cog):
             #print(self.vc[context.guild.id])
             await self.join_vc(context, userChannel)
             #print(self.vc[id])
-            await context.send(f'Chochetrox se conecta a {userChannel}')
+            await context.send(f'Chochetrox se conecta a {userChannel}, biba')
         else:
             await context.send("Necesitas estar conectado a un canal de voz, perkinaso")
             
@@ -167,3 +167,6 @@ class music_cog(commands.Cog):
         if self.vc[id] != None:
             await context.send("Chochetrox dice chao, conchetumare")
             await self.vc[id].disconnect()
+            
+async def setup(bot):
+    await bot.add_cog(music_cog(bot))
