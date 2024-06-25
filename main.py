@@ -2,12 +2,10 @@
     Chochetongo
 """
 import asyncio
-from http import client
 from dotenv import load_dotenv
 import os
 import discord
-from discord.ext import commands, tasks
-from cogs.music_cog import music_cog
+from discord.ext import commands
 
 intents = discord.Intents().all()
 client = discord.Client(intents=intents)
